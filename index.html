@@ -251,7 +251,7 @@ textarea.copy{width:100%;min-height:140px;border:1px solid var(--line);border-ra
 
     <div class="card">
       <div style="font-weight:700">Contrôles</div>
-      <div class="set"><div class="l">Demander si un code revient<div>Deux cartons du même poids ont le même code. Activé : l'app demande avant d'ajouter. Désactivé : elle compte à chaque nouveau passage.</div></div>
+      <div class="set"><div class="l">Demander si un code revient<div>Deux cartons du même poids ont le même code. Activé : l'app demande avant d'ajouter. Désactivé : elle compte à chaque nouveau passage. Le carton qui vient d'être compté n'est jamais recompté s'il revient tout de suite.</div></div>
         <label class="sw"><input type="checkbox" id="sDup"><span></span></label></div>
       <div class="set"><div class="l">Signaler les poids inhabituels<div>Surligne un poids très différent des autres.</div></div>
         <label class="sw"><input type="checkbox" id="sOut"><span></span></label></div>
@@ -1222,6 +1222,7 @@ const LIVE_OK = (() => {
 let live = null;
 const GONE_MS = 900;     // a code must be out of view this long before it can count again
 const COOLDOWN_MS = 600;  // minimum time between two cartons
+const ASK_GONE_MS = 2500; // a "same code" question disappears once its label has been gone this long
 
 async function startLive() {
   if (live && live.running) return;
@@ -1337,6 +1338,8 @@ function handleFrame(codes) {
   // release codes that have left the view
   for (const k of [...live.lock]) if (now - (live.seen.get(k) || 0) > GONE_MS) live.lock.delete(k);
   if (live.pending && now - (live.seen.get(live.pending.k) || 0) > GONE_MS) { live.pending = null; camMsg('Visez le code-barres d\'un carton'); }
+  // a "same code" question whose label has been out of view for a while is no longer about the carton in front: remove it
+  if (live.ask && now - (live.seen.get(live.ask) || 0) > ASK_GONE_MS) { live.ask = null; camMsg('Visez le code-barres d\'un carton'); }
   if (!codes.length || now - live.lastAddAt < COOLDOWN_MS) return;
 
   let pick = null;
@@ -1344,6 +1347,7 @@ function handleFrame(codes) {
   if (pick) {
     const k = normKey(pick.c);
     live.nw = null;
+    if (k !== live.lastKey) live.otherSeen = true;   // another carton came into view since the last count
     if (live.lock.has(k)) {                   // same label still in front of the camera
       if (live.lastKey === k && now - live.lastAddAt > 2500 && !live.heldHint) { live.heldHint = true; camMsg('Carton déjà compté — passez au suivant'); }
       return;
@@ -1356,14 +1360,26 @@ function handleFrame(codes) {
       camMsg('Déjà compté : carton n°' + (dupIdx + 1) + ' (' + fmtKg(S.cur.entries[dupIdx].mg) + ' kg)', 'warn');
       return;
     }
-    if (dupIdx >= 0 && S.settings.dupAlert) {   // same code, maybe another carton of the same weight
-      beep(false);
+    // the carton just counted, back after the camera lost its label for a moment
+    // (glare, shaking): same carton, so no beep and no count. A new carton of the
+    // same weight can still be added with the button.
+    if (dupIdx >= 0 && dupIdx === S.cur.entries.length - 1 && k === live.lastKey && !live.otherSeen) {
       const p = pick;
-      camMsg('Même code que le carton n°' + (dupIdx + 1) + ' (' + fmtKg(S.cur.entries[dupIdx].mg) + ' kg) <button class="btn sm primary" id="camSame">+ Autre carton, ajouter</button>', 'warn');
-      $('#camSame').onclick = () => { if (!live) return; live.lastAddAt = Date.now(); live.lastKey = k; live.heldHint = false; addEntry(p.w.mg, p.c, 'scan', p.w.dec); };
+      live.ask = k; live.heldHint = true;   // keep this message (and its button) on screen
+      camMsg('Carton n°' + (dupIdx + 1) + ' déjà compté. <button class="btn sm" id="camSame">Nouveau carton, même poids ? Ajouter</button>');
+      $('#camSame').onclick = () => { if (!live) return; live.ask = null; live.lastAddAt = Date.now(); live.lastKey = k; live.otherSeen = false; live.heldHint = false; addEntry(p.w.mg, p.c, 'scan', p.w.dec); };
       return;
     }
-    live.lastAddAt = now; live.lastKey = k; live.heldHint = false;
+    if (dupIdx >= 0 && S.settings.dupAlert) {   // same code as an earlier carton: maybe another carton of the same weight
+      beep(false);
+      const p = pick;
+      live.ask = k;
+      camMsg('Même code que le carton n°' + (dupIdx + 1) + ' (' + fmtKg(S.cur.entries[dupIdx].mg) + ' kg) <button class="btn sm primary" id="camSame">+ Autre carton, ajouter</button>', 'warn');
+      $('#camSame').onclick = () => { if (!live) return; live.ask = null; live.lastAddAt = Date.now(); live.lastKey = k; live.otherSeen = false; live.heldHint = false; addEntry(p.w.mg, p.c, 'scan', p.w.dec); };
+      return;
+    }
+    live.ask = null;
+    live.lastAddAt = now; live.lastKey = k; live.otherSeen = false; live.heldHint = false;
     addEntry(pick.w.mg, pick.c, 'scan', pick.w.dec);
     return;
   }
