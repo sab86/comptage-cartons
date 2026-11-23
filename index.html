@@ -1,13 +1,20 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" translate="no">
 <head>
 <meta charset="utf-8">
+<meta name="google" content="notranslate">
+<meta name="theme-color" content="#1c2f6e">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Comptage cartons</title>
 <style>
 :root{
-  --bg:#f2f3ef; --card:#ffffff; --ink:#1b2320; --muted:#5f6a65; --line:#dfe3dc;
-  --accent:#0e7a5c; --accent-2:#0a5e47; --accent-soft:#e3f2ec;
+  --bg:#f2f4f9; --card:#ffffff; --ink:#121a33; --muted:#5a6378; --line:#dde2ee;
+  --accent:#1c2f6e; --accent-2:#132250; --accent-soft:#e7ecf8; --blue:#2c4fa3; --cheese:#f2c230; --ok:#0f8a5f;
   --warn:#a85b06; --warn-soft:#fdf1df; --danger:#b42318; --danger-soft:#fde8e6;
   --radius:14px;
 }
@@ -15,14 +22,16 @@
 html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
 button,input,select{font:inherit;color:inherit}
 .wrap{max-width:560px;margin:0 auto;padding:0 14px 90px}
-header{display:flex;align-items:center;justify-content:space-between;padding:14px 2px 8px}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 -14px 12px;padding:14px 16px 14px;background:var(--accent);color:#fff;border-bottom:4px solid var(--cheese)}
 header h1{font-size:20px;margin:0;letter-spacing:-.01em}
+header .brand{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--cheese)}
+header .sync{color:#c9d3ef}
 .sync{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
 .dot{width:8px;height:8px;border-radius:50%;background:#b9c0bb}
-.dot.ok{background:var(--accent)} .dot.slow{background:var(--warn)}
-nav.tabs{display:flex;background:#e6e9e3;border-radius:12px;padding:4px;gap:4px;margin:4px 0 14px}
+.dot.ok{background:var(--ok)} .dot.slow{background:var(--warn)}
+nav.tabs{display:flex;background:#e3e7f1;border-radius:12px;padding:4px;gap:4px;margin:4px 0 14px}
 nav.tabs button{flex:1;border:0;background:transparent;padding:10px 6px;border-radius:9px;font-weight:600;color:var(--muted);cursor:pointer}
-nav.tabs button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+nav.tabs button.on{background:var(--card);color:var(--accent);box-shadow:0 1px 2px rgba(0,0,0,.08)}
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px}
 .stack>*+*{margin-top:12px}
 label.f{display:block;font-size:13px;color:var(--muted);margin:0 0 6px;font-weight:600}
@@ -34,13 +43,14 @@ input.t:focus{border-color:var(--accent)}
 .tot .v{font-size:34px;font-weight:750;font-variant-numeric:tabular-nums;letter-spacing:-.02em;line-height:1.15;margin-top:2px;white-space:nowrap}
 .tot .v small{font-size:16px;font-weight:600;color:var(--muted);margin-left:3px}
 .tot.big{background:var(--accent);border-color:var(--accent);color:#fff}
-.tot.big .k,.tot.big .v small{color:#cdeee2}
+.tot.big .k{color:#c9d3ef}.tot.big .v small{color:var(--cheese)}
 .sub{font-size:13px;color:var(--muted);margin-top:6px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
-.btn{display:flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:12px;padding:13px 16px;font-weight:650;cursor:pointer;background:#e7ebe5;color:var(--ink);text-align:center;user-select:none}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:12px;padding:13px 16px;font-weight:650;cursor:pointer;background:#e6eaf3;color:var(--ink);text-align:center;user-select:none}
 .btn:active{transform:translateY(1px)}
 .btn.primary{background:var(--accent);color:#fff}
 .btn.primary:active{background:var(--accent-2)}
-.btn.scan{font-size:20px;padding:20px 16px;border-radius:16px;background:var(--accent);color:#fff;box-shadow:0 6px 16px rgba(14,122,92,.25)}
+.btn.scan{font-size:20px;padding:20px 16px;border-radius:16px;background:var(--accent);color:#fff;box-shadow:0 6px 16px rgba(28,47,110,.28)}
+.btn.scan svg{color:var(--cheese)}
 .btn.danger{background:var(--danger-soft);color:var(--danger)}
 .btn.ghost{background:transparent;color:var(--accent);padding:8px}
 .btn.sm{padding:9px 12px;font-size:14px;border-radius:10px}
@@ -59,8 +69,8 @@ ul.list li{display:flex;align-items:center;gap:10px;padding:10px 10px 10px 12px;
 ul.list li:first-child{border-top:0}
 ul.list li.warn{background:var(--warn-soft)}
 ul.list li.flash{animation:fl 1.2s ease-out}
-@keyframes fl{from{background:#c9f0df}to{background:transparent}}
-.num{flex:0 0 auto;min-width:34px;height:28px;border-radius:8px;background:#eef1ec;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;padding:0 6px}
+@keyframes fl{from{background:#fff1c2}to{background:transparent}}
+.num{flex:0 0 auto;min-width:34px;height:28px;border-radius:8px;background:#eef1f8;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;padding:0 6px}
 .w{font-weight:700;font-size:18px;font-variant-numeric:tabular-nums;white-space:nowrap}
 .meta{flex:1;min-width:0;font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .meta .tag{color:var(--warn);font-weight:700}
@@ -79,12 +89,12 @@ ul.list li.flash{animation:fl 1.2s ease-out}
 .set .l{font-weight:600}.set .l div{font-size:13px;color:var(--muted);font-weight:400}
 .sw{position:relative;flex:0 0 auto;width:50px;height:30px}
 .sw input{opacity:0;width:0;height:0}
-.sw span{position:absolute;inset:0;background:#cfd5cd;border-radius:30px;transition:.2s}
+.sw span{position:absolute;inset:0;background:#cdd3e1;border-radius:30px;transition:.2s}
 .sw span:before{content:"";position:absolute;width:24px;height:24px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
 .sw input:checked+span{background:var(--accent)}
 .sw input:checked+span:before{transform:translateX(20px)}
 .rule{background:var(--accent-soft);border-radius:10px;padding:10px 12px;font-size:14px}
-.rule.none{background:#eef1ec;color:var(--muted)}
+.rule.none{background:#eef1f8;color:var(--muted)}
 code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;word-break:break-all}
 /* toast */
 #toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(140%);transition:transform .25s;z-index:48;width:min(520px,calc(100% - 24px))}
@@ -109,10 +119,10 @@ code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font
 .chips{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 .chips button{border:1.5px solid var(--line);background:#fff;border-radius:20px;padding:6px 14px;font-weight:600;cursor:pointer}
 .chips button.on{background:var(--ink);border-color:var(--ink);color:#fff}
-.preview{background:#eef1ec;border-radius:10px;padding:10px 12px;margin-top:10px}
+.preview{background:#eef1f8;border-radius:10px;padding:10px 12px;margin-top:10px}
 .preview.ok{background:var(--accent-soft)}.preview.bad{background:var(--danger-soft);color:var(--danger)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(98px,1fr));gap:6px;margin-top:10px}
-.grid div{background:#f4f6f2;border-radius:8px;padding:6px 8px;font-size:13px;font-variant-numeric:tabular-nums}
+.grid div{background:#f3f5fb;border-radius:8px;padding:6px 8px;font-size:13px;font-variant-numeric:tabular-nums}
 .grid div b{color:var(--muted);font-weight:600;margin-right:4px}
 .kv{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line)}
 .kv span:last-child{font-weight:700;font-variant-numeric:tabular-nums}
@@ -120,14 +130,16 @@ textarea.copy{width:100%;min-height:140px;border:1px solid var(--line);border-ra
 /* busy */
 #busy{position:fixed;inset:0;background:rgba(242,243,239,.88);display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;z-index:60;font-weight:650}
 #busy.show{display:flex}
-.spin{width:42px;height:42px;border-radius:50%;border:4px solid #cfe7dd;border-top-color:var(--accent);animation:sp .8s linear infinite}
+.spin{width:42px;height:42px;border-radius:50%;border:4px solid #d5ddf0;border-top-color:var(--accent);animation:sp .8s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 .hide{display:none!important}
+.installbar{display:flex;align-items:center;gap:10px;background:#fff7dc;border:1px solid #f0dc9a;border-radius:12px;padding:10px 12px;font-size:14px;font-weight:600}
+.installbar span{flex:1}
 #cam{position:fixed;inset:0;background:#000;z-index:45;display:flex;flex-direction:column}
 #cam video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-#cam .shade{position:absolute;inset:0;pointer-events:none;display:flex;align-items:center;justify-content:center}
-#camBox{width:90%;max-width:520px;height:30%;max-height:280px;border-radius:18px;box-shadow:0 0 0 2000px rgba(0,0,0,.38);border:3px solid rgba(255,255,255,.85);transition:border-color .15s, box-shadow .15s}
-#camBox.ok{border-color:#3ddc97;box-shadow:0 0 0 2000px rgba(0,0,0,.38),0 0 0 6px rgba(61,220,151,.45)}
+#cam .shade{position:absolute;inset:0;pointer-events:none}
+#camBox{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);width:92%;max-width:560px;height:16vh;min-height:110px;max-height:190px;border-radius:18px;box-shadow:0 0 0 2000px rgba(0,0,0,.38);border:3px solid rgba(255,255,255,.85);transition:border-color .15s, box-shadow .15s}
+#camBox.ok{border-color:#35d08d;box-shadow:0 0 0 2000px rgba(0,0,0,.38),0 0 0 6px rgba(61,220,151,.45)}
 #camBox.warn{border-color:#ffb547}
 .cam-top{position:relative;display:flex;align-items:center;gap:10px;padding:14px 14px 0}
 .cam-stats{flex:1;display:flex;gap:16px;background:rgba(0,0,0,.55);color:#fff;border-radius:14px;padding:10px 14px;font-variant-numeric:tabular-nums;backdrop-filter:blur(6px)}
@@ -136,9 +148,12 @@ textarea.copy{width:100%;min-height:140px;border:1px solid var(--line);border-ra
 .cam-ib.on{background:#ffd34d;color:#000}
 .cam-mid{flex:1}
 .cam-last{position:relative;margin:0 14px 10px;background:rgba(0,0,0,.62);color:#fff;border-radius:14px;padding:12px 14px;font-weight:650;text-align:center;min-height:50px;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;backdrop-filter:blur(6px)}
-.cam-last.ok{background:rgba(14,122,92,.92)}.cam-last.warn{background:rgba(168,91,6,.95)}
+.cam-last.ok{background:rgba(15,138,95,.94)}.cam-last.warn{background:rgba(168,91,6,.95)}
 .cam-last .big{font-size:22px}
-.cam-bottom{position:relative;display:flex;gap:10px;padding:0 14px 18px}
+.cam-bottom{position:relative;display:flex;gap:10px;padding:0 14px 10px}
+.cam-guide{position:absolute;left:0;right:0;top:calc(42% - max(55px, min(8vh, 95px)) - 34px);text-align:center;color:#fff;font-weight:650;font-size:15px;text-shadow:0 1px 3px rgba(0,0,0,.8);pointer-events:none;padding:0 20px}
+.cam-diag{position:relative;text-align:center;color:rgba(255,255,255,.55);font-size:11px;padding:0 0 8px}
+.cam-stats b{color:#fff}.cam-stats div:last-child b{color:var(--cheese)}
 .cam-bottom .btn{flex:1;padding:16px 10px;font-size:16px;white-space:nowrap}
 .cam-bottom .btn:not(.primary){background:rgba(255,255,255,.92)}
 .pick{position:relative}
@@ -154,7 +169,7 @@ textarea.copy{width:100%;min-height:140px;border:1px solid var(--line);border-ra
 <body>
 <div class="wrap">
   <header>
-    <h1>Comptage cartons</h1>
+    <div><div class="brand">Gastromixte</div><h1>Comptage cartons</h1></div>
     <div class="sync" id="sync"><span class="dot"></span><span>…</span></div>
   </header>
   <nav class="tabs" id="tabs">
@@ -165,6 +180,7 @@ textarea.copy{width:100%;min-height:140px;border:1px solid var(--line);border-ra
 
   <!-- ============ COMPTAGE ============ -->
   <section id="v-count" class="stack">
+    <div class="installbar hide" id="installBar"><span>📲 Installez l'app sur ce téléphone : icône, plein écran, marche sans internet.</span><button class="btn sm primary" id="installBtn">Installer</button><button class="ib" id="installX" aria-label="Fermer">✕</button></div>
     <div>
       <label class="f" for="article">Article / référence</label>
       <input id="article" class="t" placeholder="ex. Poulet entier – lot 42" autocomplete="off">
@@ -235,12 +251,18 @@ textarea.copy{width:100%;min-height:140px;border:1px solid var(--line);border-ra
 
     <div class="card">
       <div style="font-weight:700">Contrôles</div>
-      <div class="set"><div class="l">Alerte code déjà scanné<div>Prévient si le même code est scanné deux fois.</div></div>
+      <div class="set"><div class="l">Demander si un code revient<div>Deux cartons du même poids ont le même code. Activé : l'app demande avant d'ajouter. Désactivé : elle compte à chaque nouveau passage.</div></div>
         <label class="sw"><input type="checkbox" id="sDup"><span></span></label></div>
       <div class="set"><div class="l">Signaler les poids inhabituels<div>Surligne un poids très différent des autres.</div></div>
         <label class="sw"><input type="checkbox" id="sOut"><span></span></label></div>
       <div class="set"><div class="l">Son à chaque carton<div>Petit bip quand un carton est ajouté.</div></div>
         <label class="sw"><input type="checkbox" id="sSnd"><span></span></label></div>
+    </div>
+
+    <div class="card" id="appCard">
+      <div style="font-weight:700">Application</div>
+      <p class="hint" id="appState" style="margin:6px 0 10px"></p>
+      <button class="btn primary sm hide" id="installBtn2">📲 Installer sur ce téléphone</button>
     </div>
 
     <div class="card help">
@@ -259,6 +281,7 @@ textarea.copy{width:100%;min-height:140px;border:1px solid var(--line);border-ra
 <div id="cam" class="hide">
   <video id="camVideo" playsinline muted autoplay></video>
   <div class="shade"><div id="camBox"></div></div>
+  <div class="cam-guide">Approchez : le code-barres doit remplir le cadre</div>
   <div class="cam-top">
     <div class="cam-stats"><div><b id="cCount">0</b>cartons</div><div><b id="cTotal">0,00</b>kg au total</div></div>
     <button class="cam-ib hide" id="torchBtn" aria-label="Lampe">🔦</button>
@@ -269,12 +292,14 @@ textarea.copy{width:100%;min-height:140px;border:1px solid var(--line);border-ra
     <button class="btn" id="camUndo">↶ Annuler le dernier</button>
     <button class="btn primary" id="camStop">Terminer le scan</button>
   </div>
+  <div class="cam-diag" id="camDiag"></div>
 </div>
 <div id="toast"><div class="in"><span class="msg"></span><button class="hide" id="toastBtn">Annuler</button></div></div>
 <div id="modal"><div class="sheet" id="sheet"></div></div>
 <div id="busy"><div class="spin"></div><div id="busyMsg">Lecture du code-barres…</div></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/umd/index.min.js" async></script>
+<script src="https://cdn.jsdelivr.net/npm/zxing-wasm@3.1.7/dist/iife/reader/index.js" async></script>
 <script>
 // ===== Core logic (weights, GS1 parsing, custom rules) =====
 // Weights are stored as integer milligrams so sums are always exact.
@@ -297,8 +322,16 @@ function decimalsOf(mg) {
   return 5;
 }
 
+// minimum decimals shown (set to 3 when the labels give weights to the gram)
+var FMT_MIN_DEC = 2;
+function decOfList(list) {
+  let d = 2;
+  (list || []).forEach(e => { d = Math.max(d, e.dec != null ? e.dec : decimalsOf(e.mg)); });
+  return Math.min(3, d);
+}
+function typedDec(s) { const m = String(s || '').trim().match(/[.,](\d+)$/); return m ? m[1].length : 0; }
 function fmtKg(mg, dec) {
-  if (dec == null) dec = Math.max(2, Math.min(3, decimalsOf(mg)));
+  if (dec == null) dec = Math.max(FMT_MIN_DEC, Math.min(3, decimalsOf(mg)));
   return new Intl.NumberFormat('fr-FR', { minimumFractionDigits: dec, maximumFractionDigits: dec }).format(mg / MG_PER_KG);
 }
 
@@ -379,7 +412,7 @@ function weightFromAIs(ais) {
       if (v != null && /^\d{6}$/.test(v)) {
         const kg = parseInt(v, 10) / Math.pow(10, d);
         const mg = Math.round(kg * f * MG_PER_KG);
-        if (mg > 0) return { mg, kind };
+        if (mg > 0) return { mg, kind, dec: f === 1 ? d : 3 };
       }
     }
   }
@@ -428,22 +461,27 @@ function weightFromCode(code, settings) {
   const p = parseGS1(code);
   if (p) {
     const w = weightFromAIs(p.ais);
-    if (w) return { mg: w.mg, how: 'gs1', kind: w.kind };
+    if (w) return { mg: w.mg, how: 'gs1', kind: w.kind, dec: w.dec };
   }
   const r = settings && settings.rule ? applyRule(cleanCode(code).replace(/\s/g, ''), settings.rule) : null;
-  if (r) return { mg: r, how: 'rule' };
+  if (r) return { mg: r, how: 'rule', dec: settings.rule.dec };
   // last resort for GS1 codes without separators: look for 310n/330n after the GTIN
   if (p && looksGS1(code)) {
     const { s } = normalizeCode(code);
     const m = s.slice(16).match(/(3[13]0)([0-5])(\d{6})/);
     if (m) {
       const mg = Math.round(parseInt(m[3], 10) / Math.pow(10, +m[2]) * MG_PER_KG);
-      if (mg > 0) return { mg, how: 'gs1', kind: m[1] === '310' ? 'net' : 'brut' };
+      if (mg > 0) return { mg, how: 'gs1', kind: m[1] === '310' ? 'net' : 'brut', dec: +m[2] };
     }
   }
   return null;
 }
 
+// true when the code identifies ONE carton (SSCC or serial number): a repeat is surely the same carton
+function hasUniqueId(code) {
+  const p = parseGS1(code);
+  return !!(p && (p.ais['00'] || p.ais['21']));
+}
 function cleanCode(code) { return normalizeCode(code).s.replace(new RegExp(GS, 'g'), ' ').trim(); }
 
 function median(arr) {
@@ -452,7 +490,7 @@ function median(arr) {
   return a.length % 2 ? a[m] : (a[m - 1] + a[m]) / 2;
 }
 
-if (typeof module !== 'undefined') module.exports = { parseWeightStr, fmtKg, sumMg, parseGS1, weightFromCode, applyRule, findRuleCandidates, looksGS1, cleanCode, median, decimalsOf, GS };
+if (typeof module !== 'undefined') module.exports = { hasUniqueId, decOfList, typedDec, parseWeightStr, fmtKg, sumMg, parseGS1, weightFromCode, applyRule, findRuleCandidates, looksGS1, cleanCode, median, decimalsOf, GS };
 
 // ===== Barcode reading from a photo (works with ZXing; uses BarcodeDetector too when the phone has it) =====
 const ZX_FORMATS = ['CODE_128', 'EAN_13', 'EAN_8', 'UPC_A', 'UPC_E', 'CODE_39', 'ITF', 'DATA_MATRIX', 'QR_CODE'];
@@ -501,10 +539,36 @@ function cropCanvas(makeCanvas, src, x, y, w, h, scale) {
 }
 const pause = () => new Promise(r => setTimeout(r, 0));
 
+// ---- zxing-wasm (zxing-cpp): stronger reader, finds several barcodes at once ----
+const WASM_FORMATS = ['Code128', 'EAN-13', 'EAN-8', 'UPC-A', 'UPC-E', 'Code39', 'ITF', 'DataMatrix', 'QRCode'];
+let _wasmP = null;
+function wasmReady(ms) {
+  if (_wasmP) return _wasmP;
+  _wasmP = (async () => {
+    const t0 = Date.now();
+    while (!(typeof window !== 'undefined' && window.ZXingWASM) && Date.now() - t0 < ms) await new Promise(r => setTimeout(r, 100));
+    const W = typeof window !== 'undefined' ? window.ZXingWASM : null;
+    if (!W) return null;
+    try {
+      await Promise.race([W.prepareZXingModule({ fireImmediately: true }), new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms))]);
+      return W;
+    } catch (e) { return null; }
+  })();
+  return _wasmP;
+}
+async function wasmRead(W, canvas, max) {
+  try {
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const r = await W.readBarcodes(img, { tryHarder: true, formats: WASM_FORMATS, maxNumberOfSymbols: max || 4 });
+    return r.filter(x => x.isValid !== false && x.text).map(x => x.text);
+  } catch (e) { return []; }
+}
+
 // img: anything drawable (Image / canvas). Returns array of unique code strings.
 // stopWhen(code) -> true to stop early (e.g. a code that carries a weight)
 async function readBarcodes(img, opts) {
-  const { Z, makeCanvas, detector, stopWhen } = opts;
+  const { Z, W: WA, makeCanvas, detector, stopWhen } = opts;
   const W = img.width || img.naturalWidth, H = img.height || img.naturalHeight;
   const found = [];
   const add = c => { if (c && !found.includes(c)) found.push(c); };
@@ -516,6 +580,10 @@ async function readBarcodes(img, opts) {
   if (detector) {
     try { (await detector.detect(full)).forEach(b => add(b.rawValue)); } catch (e) {}
     if (done()) return found;
+  }
+  if (WA) {
+    (await wasmRead(WA, cropCanvas(makeCanvas, img, 0, 0, W, H, scaleFor(2400)), 8)).forEach(add);
+    if (done() || found.length) return found;
   }
   if (!Z) return found;
 
@@ -535,7 +603,7 @@ async function readBarcodes(img, opts) {
   return found;
 }
 
-if (typeof module !== 'undefined') module.exports = { readBarcodes };
+if (typeof module !== 'undefined') module.exports = { readBarcodes, wasmRead };
 
 
 // ===================== App =====================
@@ -693,12 +761,13 @@ function twoStep(btn, label, fn) {
 function medianMg() { return median(S.cur.entries.map(e => e.mg)); }
 function isOutlier(mg, med) { return S.settings.outliers && S.cur.entries.length >= 5 && med > 0 && (mg > med * 2 || mg < med * 0.5); }
 
-function addEntry(mg, code, src) {
-  const e = { id: uid(), mg, code: code || null, src, t: Date.now() };
+function addEntry(mg, code, src, dec) {
+  const e = { id: uid(), mg, code: code || null, src, t: Date.now(), dec: dec != null ? dec : null };
   if (!S.cur.startedAt) S.cur.startedAt = Date.now();
   S.cur.entries.push(e);
   S.lastAdded = e.id;
   saveCur(); renderCount();
+  FMT_MIN_DEC = decOfList(S.cur.entries);
   const n = S.cur.entries.length;
   const out = isOutlier(mg, medianMg());
   beep(!out);
@@ -715,17 +784,19 @@ function removeEntry(id, silent) {
 }
 
 // a code was read (photo or Bluetooth reader)
+function lastIndexOfCode(key) {
+  for (let i = S.cur.entries.length - 1; i >= 0; i--) { const e = S.cur.entries[i]; if (e.code && normKey(e.code) === key) return i; }
+  return -1;
+}
 function handleCode(code, src) {
   const w = weightFromCode(code, S.settings);
-  if (S.settings.dupAlert) {
-    const key = normKey(code);
-    const i = S.cur.entries.findIndex(e => e.code && normKey(e.code) === key);
-    if (i >= 0) return modalDup(code, w, src, i);
-  }
+  const i = lastIndexOfCode(normKey(code));
+  if (i >= 0 && hasUniqueId(code)) { beep(false); toast('Déjà compté : carton n°' + (i + 1) + ' (même numéro de carton)', 'warn'); return; }
+  if (i >= 0 && S.settings.dupAlert) return modalDup(code, w, src, i);
   proceedCode(code, w, src);
 }
 function proceedCode(code, w, src) {
-  if (w) addEntry(w.mg, code, src);
+  if (w) addEntry(w.mg, code, src, w.dec);
   else modalAskWeight(code, src);
 }
 
@@ -733,11 +804,10 @@ function modalDup(code, w, src, i) {
   const e = S.cur.entries[i];
   beep(false);
   openModal(
-    '<h3>Code déjà scanné</h3>' +
-    '<p>Ce code est déjà dans la liste : <b>carton n°' + (i + 1) + '</b> (' + fmtKg(e.mg) + ' kg).</p>' +
-    '<p>Deux cartons différents peuvent avoir le même code s\'ils ont le même poids et le même lot.</p>' +
-    '<div class="acts"><button class="btn primary" data-a="skip">C\'est le même carton – ne pas compter</button>' +
-    '<button class="btn" data-a="add">C\'est un autre carton – ajouter</button></div>',
+    '<h3>Même code que le carton n°' + (i + 1) + '</h3>' +
+    '<p>Ce code est déjà dans la liste (<b>' + fmtKg(e.mg) + ' kg</b>). Deux cartons du même poids ont le même code.</p>' +
+    '<div class="acts"><button class="btn primary" data-a="add">C\'est un autre carton – ajouter</button>' +
+    '<button class="btn" data-a="skip">C\'est le même carton – ne pas compter</button></div>',
     el => {
       el.querySelector('[data-a=skip]').onclick = () => { closeModal(); toast('Carton ignoré (déjà compté)'); };
       el.querySelector('[data-a=add]').onclick = () => { closeModal(); proceedCode(code, w, src); };
@@ -756,7 +826,7 @@ function modalAskWeight(code, src) {
       const go = () => {
         const mg = parseWeightStr(el.querySelector('#aw').value);
         if (!mg) { el.querySelector('#aw').focus(); toast('Poids invalide', 'err'); return; }
-        closeModal(); addEntry(mg, code, src);
+        closeModal(); addEntry(mg, code, src, typedDec(el.querySelector('#aw').value));
       };
       el.querySelector('[data-a=ok]').onclick = go;
       el.querySelector('#aw').addEventListener('keydown', ev => { if (ev.key === 'Enter') go(); });
@@ -779,7 +849,7 @@ function modalNoCode() {
       el.querySelector('[data-a=ok]').onclick = () => {
         const mg = parseWeightStr(el.querySelector('#nw').value);
         if (!mg) { toast('Poids invalide', 'err'); return; }
-        closeModal(); addEntry(mg, null, 'manuel');
+        closeModal(); addEntry(mg, null, 'manuel', typedDec(el.querySelector('#nw').value));
       };
       el.querySelector('[data-a=x]').onclick = closeModal;
     });
@@ -799,7 +869,7 @@ function modalEdit(id) {
       const save = () => {
         const mg = parseWeightStr(el.querySelector('#ew').value);
         if (!mg) { toast('Poids invalide', 'err'); return; }
-        e.mg = mg; e.edited = true; saveCur(); renderCount(); closeModal(); toast('Carton n°' + (i + 1) + ' corrigé : ' + fmtKg(mg) + ' kg');
+        e.mg = mg; e.dec = typedDec(el.querySelector('#ew').value); e.edited = true; saveCur(); renderCount(); closeModal(); toast('Carton n°' + (i + 1) + ' corrigé : ' + fmtKg(mg) + ' kg');
       };
       el.querySelector('[data-a=ok]').onclick = save;
       el.querySelector('#ew').addEventListener('keydown', ev => { if (ev.key === 'Enter') save(); });
@@ -842,9 +912,9 @@ const makeCanvas = (w, h) => { const c = document.createElement('canvas'); c.wid
 async function photoToCodes(file) {
   busy(true, 'Lecture du code-barres…');
   try {
-    const [Z, det, img] = await Promise.all([zxReady(8000), getDetector(), loadImg(file)]);
-    if (!Z && !det) { busy(false); toast('Lecteur indisponible (connexion ?). Saisissez le poids à la main.', 'err'); return null; }
-    const codes = await readBarcodes(img, { Z, makeCanvas, detector: det, stopWhen: c => !!weightFromCode(c, S.settings) });
+    const [Z, det, img, WA] = await Promise.all([zxReady(8000), getDetector(), loadImg(file), wasmReady(6000)]);
+    if (!Z && !det && !WA) { busy(false); toast('Lecteur indisponible (connexion ?). Saisissez le poids à la main.', 'err'); return null; }
+    const codes = await readBarcodes(img, { Z, W: WA, makeCanvas, detector: det, stopWhen: c => !!weightFromCode(c, S.settings) });
     URL.revokeObjectURL(img.src);
     return codes;
   } catch (e) {
@@ -874,7 +944,7 @@ $('#manual').addEventListener('submit', ev => {
   const inp = $('#mIn'); const v = inp.value.trim();
   if (!v) return;
   const mg = parseWeightStr(v);
-  if (mg) { addEntry(mg, null, 'manuel'); inp.value = ''; inp.focus(); return; }
+  if (mg) { addEntry(mg, null, 'manuel', typedDec(v)); inp.value = ''; inp.focus(); return; }
   if (v.replace(/\s/g, '').length >= 8) { inp.value = ''; handleCode(v, 'lecteur'); return; }
   toast('Poids invalide. Exemple : 24,35', 'err');
 });
@@ -911,10 +981,11 @@ function resetCur() { S.cur = { article: '', entries: [], startedAt: null, updat
 // ---------- render: count ----------
 function renderCount() {
   const es = S.cur.entries, n = es.length, tot = sumMg(es);
+  FMT_MIN_DEC = decOfList(es);
   if (live && live.running) updateCamStats();
   if (document.activeElement !== $('#article')) $('#article').value = S.cur.article || '';
   $('#tCount').textContent = n;
-  const dec = Math.max(2, Math.min(3, Math.max(0, ...es.map(e => decimalsOf(e.mg)))));
+  const dec = FMT_MIN_DEC;
   $('#tWeight').innerHTML = esc(fmtKg(tot, dec)) + '<small>kg</small>';
   const med = medianMg();
   const outs = es.filter(e => isOutlier(e.mg, med)).length;
@@ -958,15 +1029,17 @@ function renderHistory() {
   box.innerHTML = hs.map(h =>
     '<button class="hcard" data-id="' + esc(h.id) + '"><div class="a">' + esc(h.article || 'Sans nom') + '</div>' +
     '<div class="d">' + fmtDate(h.savedAt) + '</div>' +
-    '<div class="s"><span><b>' + h.n + '</b> cartons</span><span><b>' + fmtKg(h.totalMg) + '</b> kg</span></div></button>').join('');
+    '<div class="s"><span><b>' + h.n + '</b> cartons</span><span><b>' + fmtKg(h.totalMg, decOfList(h.entries)) + '</b> kg</span></div></button>').join('');
 }
 $('#histList').addEventListener('click', ev => { const b = ev.target.closest('.hcard'); if (b) modalHist(b.dataset.id); });
 function histText(h) {
+  FMT_MIN_DEC = decOfList(h.entries);
   return 'Article : ' + (h.article || 'Sans nom') + '\nDate : ' + fmtDate(h.savedAt) + '\nCartons : ' + h.n + '\nPoids total : ' + fmtKg(h.totalMg) + ' kg\n\nDétail :\n' +
     h.entries.map((e, i) => (i + 1) + '. ' + fmtKg(e.mg) + ' kg').join('\n');
 }
 function modalHist(id) {
   const h = allHistory().find(x => x.id === id); if (!h) return;
+  FMT_MIN_DEC = decOfList(h.entries);
   openModal(
     '<h3>' + esc(h.article || 'Sans nom') + '</h3><p>' + fmtDate(h.savedAt) + '</p>' +
     '<div class="kv"><span>Cartons</span><span>' + h.n + '</span></div>' +
@@ -988,7 +1061,7 @@ function modalHist(id) {
         if (S.cloud) S.cloud.db.doc(S.cloud.base + '/' + id).delete().catch(() => {});
         closeModal(); renderHistory(); toast('Comptage supprimé');
       });
-      el.querySelector('[data-a=x]').onclick = closeModal;
+      el.querySelector('[data-a=x]').onclick = () => { closeModal(); FMT_MIN_DEC = decOfList(S.cur.entries); };
     });
 }
 
@@ -1147,7 +1220,7 @@ const LIVE_OK = (() => {
   } catch (e) { return false; }
 })();
 let live = null;
-const GONE_MS = 1200;     // a code must be out of view this long before it can count again
+const GONE_MS = 900;     // a code must be out of view this long before it can count again
 const COOLDOWN_MS = 600;  // minimum time between two cartons
 
 async function startLive() {
@@ -1162,15 +1235,22 @@ async function startLive() {
   document.body.style.overflow = 'hidden';
   try { await video.play(); } catch (e) {}
   const track = stream.getVideoTracks()[0];
-  live = { running: true, stream, track, seen: new Map(), lock: new Set(), lastAddAt: 0, nw: null, pending: null, torch: false, timer: null, det: await getDetector(), Z: window.ZXing || null, canvas: makeCanvas(2, 2) };
+  live = { running: true, stream, track, seen: new Map(), lock: new Set(), lastAddAt: 0, nw: null, pending: null, torch: false, timer: null, det: await getDetector(), Z: window.ZXing || null, canvas: makeCanvas(2, 2), n: 0, detErr: 0 };
+  if (!live.Z) zxReady(10000).then(Z => { if (live) live.Z = Z; });
+  live.W = null; wasmReady(15000).then(W => { if (live) { live.W = W; camDiag(); } });
   try {
     const caps = track.getCapabilities ? track.getCapabilities() : {};
     $('#torchBtn').classList.toggle('hide', !caps.torch);
     if (caps.focusMode && caps.focusMode.includes('continuous')) track.applyConstraints({ advanced: [{ focusMode: 'continuous' }] }).catch(() => {});
   } catch (e) {}
   try { if (navigator.wakeLock) live.wake = await navigator.wakeLock.request('screen'); } catch (e) {}
+  try {
+    const st = track.getSettings ? track.getSettings() : {};
+    if (Math.max(st.width || 0, st.height || 0) < 1280) await track.applyConstraints({ width: { ideal: 1920 }, height: { ideal: 1080 } }).catch(() => {});
+  } catch (e) {}
   if (!live.det && !live.Z) live.Z = await zxReady(8000);
-  if (!live.det && !live.Z) { stopLive(); toast('Lecteur indisponible (connexion ?). Saisissez le poids à la main.', 'err'); return; }
+  if (!live.det && !live.Z && !live.W) { stopLive(); toast('Lecteur indisponible (connexion ?). Saisissez le poids à la main.', 'err'); return; }
+  setTimeout(camDiag, 1200);
   camMsg('Visez le code-barres d\'un carton');
   updateCamStats();
   liveLoop();
@@ -1198,7 +1278,7 @@ async function liveLoop() {
     try { codes = await detectFrame(video); } catch (e) {}
     if (live && live.running) handleFrame(codes);
   }
-  if (live && live.running) live.timer = setTimeout(liveLoop, live.det ? 90 : 40);
+  if (live && live.running) live.timer = setTimeout(liveLoop, live.det ? 80 : 30);
 }
 // the on-screen frame, in video pixels (the video is shown "cover", so part of it is off screen)
 function boxInVideo(video) {
@@ -1208,13 +1288,37 @@ function boxInVideo(video) {
   const offX = (vr.width - vw * sc) / 2, offY = (vr.height - vh * sc) / 2;
   let x = (br.left - vr.left - offX) / sc, y = (br.top - vr.top - offY) / sc, w = br.width / sc, h = br.height / sc;
   // small margin around the frame
-  x -= w * 0.05; y -= h * 0.1; w *= 1.1; h *= 1.2;
+  x -= w * 0.04; y -= h * 0.35; w *= 1.08; h *= 1.7;
   x = Math.max(0, x); y = Math.max(0, y); w = Math.min(vw - x, w); h = Math.min(vh - y, h);
   return { x, y, w, h };
 }
+function camDiag() {
+  if (!live) return;
+  const v = $('#camVideo');
+  const r = [live.det && 'natif', live.W && 'zxing-cpp', !live.W && live.Z && 'zxing-js'].filter(Boolean).join(' + ');
+  $('#camDiag').textContent = 'Caméra ' + v.videoWidth + '×' + v.videoHeight + ' · ' + (r || 'chargement…');
+}
 async function detectFrame(video) {
   const b = boxInVideo(video);
+  live.n++;
+  let out = [];
   if (live.det) {
+    try { out = await detectNative(video, b); live.detErr = 0; }
+    catch (e) { if (++live.detErr > 5) { live.det = null; camDiag(); } }
+  }
+  // backup reader: always when there is no native reader, otherwise every other frame
+  if (!out.length && (live.W || live.Z) && (!live.det || live.n % 2 === 0)) {
+    // full picture width (a barcode a little wider than the frame still reads), frame height only
+    const vw = video.videoWidth, sc = Math.min(1, 1400 / vw);
+    const c = live.canvas; c.width = Math.max(1, Math.round(vw * sc)); c.height = Math.max(1, Math.round(b.h * sc));
+    c.getContext('2d', { willReadFrequently: true }).drawImage(video, 0, b.y, vw, b.h, 0, 0, c.width, c.height);
+    if (live.W) out = await wasmRead(live.W, c, 4);
+    else { const t = (live.n % 3 === 0) ? zxDecode(live.Z, c) : zxDecodeFast(live.Z, c); if (t) out = [t]; }
+  }
+  return out;
+}
+async function detectNative(video, b) {
+  {
     // only barcodes inside the frame count (not the labels of nearby cartons)
     const cx0 = b.x + b.w / 2, cy0 = b.y + b.h / 2;
     const r = (await live.det.detect(video)).filter(c => {
@@ -1226,12 +1330,6 @@ async function detectFrame(video) {
     r.sort((p, q) => d(p) - d(q));
     return r.map(c => c.rawValue).filter(Boolean);
   }
-  // ZXing: read only the area inside the frame
-  const sc = Math.min(1, 1100 / b.w);
-  const c = live.canvas; c.width = Math.max(1, Math.round(b.w * sc)); c.height = Math.max(1, Math.round(b.h * sc));
-  c.getContext('2d', { willReadFrequently: true }).drawImage(video, b.x, b.y, b.w, b.h, 0, 0, c.width, c.height);
-  const t = zxDecodeFast(live.Z, c);
-  return t ? [t] : [];
 }
 function handleFrame(codes) {
   const now = Date.now();
@@ -1246,13 +1344,27 @@ function handleFrame(codes) {
   if (pick) {
     const k = normKey(pick.c);
     live.nw = null;
-    if (live.lock.has(k)) return;            // same carton still in front of the camera
+    if (live.lock.has(k)) {                   // same label still in front of the camera
+      if (live.lastKey === k && now - live.lastAddAt > 2500 && !live.heldHint) { live.heldHint = true; camMsg('Carton déjà compté — passez au suivant'); }
+      return;
+    }
     live.lock.add(k);
     if (live.pending && live.pending.k !== k) live.pending = null;
-    const dupIdx = S.cur.entries.findIndex(e => e.code && normKey(e.code) === k);
-    if (S.settings.dupAlert && dupIdx >= 0) { modalDup(pick.c, pick.w, 'scan', dupIdx); return; }
-    live.lastAddAt = now;
-    addEntry(pick.w.mg, pick.c, 'scan');
+    const dupIdx = lastIndexOfCode(k);
+    if (dupIdx >= 0 && hasUniqueId(pick.c)) {   // serial/SSCC: surely the same carton
+      beep(false);
+      camMsg('Déjà compté : carton n°' + (dupIdx + 1) + ' (' + fmtKg(S.cur.entries[dupIdx].mg) + ' kg)', 'warn');
+      return;
+    }
+    if (dupIdx >= 0 && S.settings.dupAlert) {   // same code, maybe another carton of the same weight
+      beep(false);
+      const p = pick;
+      camMsg('Même code que le carton n°' + (dupIdx + 1) + ' (' + fmtKg(S.cur.entries[dupIdx].mg) + ' kg) <button class="btn sm primary" id="camSame">+ Autre carton, ajouter</button>', 'warn');
+      $('#camSame').onclick = () => { if (!live) return; live.lastAddAt = Date.now(); live.lastKey = k; live.heldHint = false; addEntry(p.w.mg, p.c, 'scan', p.w.dec); };
+      return;
+    }
+    live.lastAddAt = now; live.lastKey = k; live.heldHint = false;
+    addEntry(pick.w.mg, pick.c, 'scan', pick.w.dec);
     return;
   }
   // only codes without weight in view: after a moment, offer to type the weight
@@ -1276,6 +1388,7 @@ function camFeedback(n, mg, out) {
 }
 function updateCamStats() {
   const es = S.cur.entries;
+  FMT_MIN_DEC = decOfList(es);
   $('#cCount').textContent = es.length;
   $('#cTotal').textContent = fmtKg(sumMg(es));
 }
@@ -1324,7 +1437,37 @@ $('#tabs').addEventListener('click', ev => {
   window.scrollTo(0, 0);
 });
 
-renderCount(); renderHistory(); renderSettings();
+// ---------- installable app (home-screen icon, full screen, offline) ----------
+const STANDALONE = (() => { try { return matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; } catch (e) { return false; } })();
+let installEvt = null;
+function renderApp() {
+  const el = $('#appState'); if (!el) return;
+  if (!LIVE_OK) { $('#appCard').classList.add('hide'); return; }
+  el.innerHTML = STANDALONE ? '✓ Installée sur ce téléphone. Elle fonctionne aussi sans internet.'
+    : installEvt ? 'Installez-la : icône sur l\'écran d\'accueil, plein écran, fonctionne sans internet.'
+    : 'Pour l\'installer : menu <b>⋮</b> de Chrome → <b>Installer l\'application</b> (ou <b>Ajouter à l\'écran d\'accueil</b>).';
+  $('#installBtn2').classList.toggle('hide', !installEvt || STANDALONE);
+  let hidden = false; try { hidden = localStorage.getItem('cc_installbar') === 'x'; } catch (e) {}
+  $('#installBar').classList.toggle('hide', !installEvt || STANDALONE || hidden);
+}
+async function doInstall() {
+  if (!installEvt) return;
+  installEvt.prompt();
+  try { const r = await installEvt.userChoice; if (r && r.outcome === 'accepted') toast('Application installée'); } catch (e) {}
+  installEvt = null; renderApp();
+}
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; renderApp(); });
+window.addEventListener('appinstalled', () => { installEvt = null; renderApp(); });
+$('#installBtn').addEventListener('click', doInstall);
+$('#installBtn2').addEventListener('click', doInstall);
+$('#installX').addEventListener('click', () => { try { localStorage.setItem('cc_installbar', 'x'); } catch (e) {} renderApp(); });
+if (LIVE_OK && 'serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+  // ask the phone to keep the saved counts (not cleared to free space)
+  try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch (e) {}
+}
+
+renderCount(); renderHistory(); renderSettings(); renderApp();
 initCloud();
 </script>
 </body>
